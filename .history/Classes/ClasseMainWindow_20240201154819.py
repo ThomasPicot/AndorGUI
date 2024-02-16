@@ -1,0 +1,91 @@
+
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+import numpy as np
+import logging
+logging.basicConfig(level=logging.DEBUG)
+import matplotlib.pyplot as plt
+
+
+from Classes.ui_AndorCam import Ui_MainWindow
+from Classes.ClasseAndor import AndorCam
+from Classes.TrigExtThread import Worker
+import pyqtgraph as pg
+
+
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.ui = Ui_MainWindow()
+        self.andor = AndorCam()
+        self.ui.setupUi(self)
+        self._number_frame = 0
+        self.worker_thread = None
+        self.main_view = self.ui.widgetFrame.addViewBox()
+        
+        self.normalization_roi = None
+        self.main_view.addItem(self.normalization_roi)
+        self.normalization_roi_visible = False
+        
+        self.normalization_roi.setVisible(False)
+        self.image_item = 0
+        self.position_norm = [0, 0]
+        
+        # connect buttons with actions
+        self.ui.pushButton_shot.clicked.connect(self.display_image_int)
+        self.ui.pushButton_start_ext.clicked.connect(self.start_thread)
+        self.ui.pushButton_stop_ext.clicked.connect(self.stop_thread)
+        self.ui.pushButton_normalisation.clicked.connect(self.toggle_normalization_roi)
+        
+    def display_image_int(self):  
+        self.andor.set_acquisition(acquisition_mode=0, exposure_time=float(self.ui.doubleSpinBox_exposure.value())*1e-3,
+                                   trigger_mode='int', frame_method='snap')
+        
+        image = np.array(self.andor.acquisition())
+        self.image_item = pg.ImageItem(image=image)
+        self.main_view.addItem(self.image_item)
+        self._number_frame = self._number_frame+1
+        logging.debug(self._number_frame)
+        
+    def display_image_ext(self):
+        logging.debug("ext acquisition setting up")
+        self.andor.set_acquisition(acquisition_mode=0, exposure_time=float(self.ui.doubleSpinBox_exposure.value())*1e-3,
+                                   trigger_mode='ext', frame_method='sequence')
+        logging.debug("setup done")
+        logging.debug("wating for frame")
+        image = np.array(self.andor.acquisition())
+        self.image_item = pg.ImageItem(image=image)
+        self.main_view.addItem(self.image_item)
+        logging.debug("sending image on frame")
+        self._number_frame = self._number_frame+1
+        logging.debug(self._number_frame)
+   
+    def start_thread(self):
+        self.worker_trhead = Worker(self)
+        self.worker_trhead.start()
+        
+    def stop_thread(self):
+        if self.worker_trhead is not None and self.worker_trhead.isRunning():
+            self.worker_trhead.requestInterruption()
+            self.worker_trhead.quit()
+            self.worker_trhead.wait(3000)
+            
+    def roi_changed(self):
+        roi_pos = self.roi.pos()
+        roi_size = self.roi.size()
+
+        # Extract the region within the ROI
+        x, y, w, h = roi_pos[0], roi_pos[1], roi_size[0], roi_size[1]
+        roi_data = self.image_data[int(y):int(y + h), int(x):int(x + w)]
+
+        # Calculate the mean of all points within the ROI
+        roi_mean = np.mean(roi_data)
+
+        # Divide the entire image by the mean of the ROI
+        normalized_image_data = self.image_data / roi_mean
+
+        # Update the image item with the normalized data
+        self.image_item.setImage(normalized_image_data)
