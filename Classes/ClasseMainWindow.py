@@ -13,6 +13,14 @@ logging.basicConfig(level=logging.DEBUG)
 
 class MainWindow(QMainWindow):
     def __init__(self):
+        """
+        Initiates the Ui_MainWindow() class that I wrote in ui_AndorCam.py file.
+        Initiates AndorCam() class that is the interface of the device Andor.
+        setup the UI.
+        As this file MUST not being touched, you need to connect buttons and methods
+        in this class.
+        initiates the attributes for the ROIs and the worker thread.
+        """
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.andor = AndorCam()
@@ -44,6 +52,11 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_stop_acq.clicked.connect(self.stop_acquisition)
 
     def display_image_int(self):
+        """
+        method of the class MainWindow that conditionally setup the acquisition with the exposure of the doubleSpinBox,
+        take a picture with 'snap' mode
+        :return:None
+        """
         self.main_view.clear()
         
         current_exposure_time = float(self.ui.doubleSpinBox_exposure.value())
@@ -76,7 +89,12 @@ class MainWindow(QMainWindow):
         self.ui.textBrowserLogs.append("Frame number : "+str(self._number_frame))
 
     def display_image_ext(self):
-        
+        """
+        method of the class MainWindow that works with GoodTime sequences. Setup the acquisition, take images
+        and add the image on the main_view.
+        Works in worker_thread.
+        :return: None
+        """
         current_exposure_time = float(self.ui.doubleSpinBox_exposure.value())
         current_trig_mode = 'ext'  
         
@@ -109,6 +127,10 @@ class MainWindow(QMainWindow):
             self.acquisition_data.append(self.image_data)
 
     def start_thread(self):
+        """
+        start thread with the button start
+        :return: None
+        """
         self.worker_thread = Worker(self)
         self.worker_thread.start()
         self._number_frame = 0
@@ -116,6 +138,10 @@ class MainWindow(QMainWindow):
 
 
     def stop_thread(self):
+        """
+        stop the thread
+        :return: None
+        """
         if self.worker_thread is not None and self.worker_thread.isRunning():
             self.worker_thread.requestInterruption()
             self.ui.textBrowserLogs.append("Stopping thread")
@@ -124,6 +150,10 @@ class MainWindow(QMainWindow):
             self._number_frame = 0
 
     def toggle_normalization(self):
+        """
+        method of class MainWindow that applies or not the normalization to the image.
+        :return: None
+        """
         if self.roi_norm is None:
             # Create ROI the first time the button is clicked
             self.roi_norm = pg.RectROI([1020, 1020], [300, 300], pen=(0, 9))
@@ -135,6 +165,11 @@ class MainWindow(QMainWindow):
             self.roi_norm = None
 
     def roi_norm_changed(self):
+        """
+        method of class MainWindow. If the ROI of the norm changes, update the image.
+
+        :return: None
+        """
         self.roi_norm_pos = self.roi_norm.pos()
         self.roi_norm_size = self.roi_norm.size()
         # Extract the region within the ROI
@@ -151,18 +186,31 @@ class MainWindow(QMainWindow):
         self.main_view.addItem(self.image_item)
 
     def set_ROI(self):
+        """
+        method of class MainWindow that set the ROI of the camera.
+        :return:
+        """
         self.cam_roi = pg.RectROI([1020, 200], [300, 300], pen={'color': 'blue', 'width': 2})
         self.main_view.addItem(self.cam_roi)
         self.cam_roi.sigRegionChangeFinished.connect(self.cam_roi_changed)
         self.ui.pushButton_setROI.setEnabled(False)
 
     def cam_roi_changed(self):
+        """
+        method of class MainWindow that updates the position of the ROI.
+        :return: None
+        """
         self.cam_roi_pos = self.cam_roi.pos()
         self.cam_roi_size = self.cam_roi.size()
         x, y, w, h = self.cam_roi_pos[0], self.cam_roi_pos[1], self.cam_roi_size[0], self.cam_roi_size[1]
         self.cam_roi_data = self.image_data[int(y):int(y + h), int(x):int(x + w)]
 
     def apply_ROI(self):
+        """
+        method of class MainWindow that applies the parameters of the ROI.
+        Binning shouldn't be applied excepted for tries
+        :return: None
+        """
         self.cam_roi_pos = self.cam_roi.pos()
         self.cam_roi_size = self.cam_roi.size()
         x, y, w, h = self.cam_roi_pos[0], self.cam_roi_pos[1], self.cam_roi_size[0], self.cam_roi_size[1]
@@ -170,6 +218,10 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_apply_ROI.setEnabled(False)
 
     def clear_ROI(self):
+        """
+        method of class MainWindow clears ROI
+        :return:
+        """
         self.main_view.removeItem(self.cam_roi)
         self.andor.cam.set_roi()
         self.ui.pushButton_setROI.setEnabled(True)
