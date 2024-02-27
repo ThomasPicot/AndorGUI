@@ -307,7 +307,7 @@ class MainWindow(QMainWindow):
         Vcut = self.image_data[int(self.x_coord), :]
         x_values = np.arange(len(Vcut))
         new_x = Vcut
-        new_y = -x_values
+        new_y = x_values
         self.ui.widget_Hcut.clear()
         self.ui.widget_Vcut.clear()
         self.ui.widget_Hcut.plot(Hcut)
