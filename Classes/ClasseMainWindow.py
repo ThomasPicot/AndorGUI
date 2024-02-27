@@ -33,7 +33,18 @@ class MainWindow(QMainWindow):
         self.trig_mode = None
         self.acquistion = False
         self.main_view = self.ui.widgetFrame.addViewBox()
-
+        #self.main_view.
+        self.resizeEvent = self.on_resize   # used to make the display of widgetFrame always square 
+        self.crosshair_h = None
+        self.crosshair_v = None
+        self.crosshair_enabled = False
+        
+        # parametrize plot widgets
+        self.main_view.scene().sigMouseClicked.connect(self.mouse_click_event)
+        self.ui.widget_Vcut.plotItem.hideAxis('bottom')
+        self.ui.widget_Vcut.plotItem.hideAxis('left')
+        self.ui.widget_Hcut.plotItem.hideAxis('bottom')
+        self.ui.widget_Hcut.plotItem.hideAxis('left')
         # __________________________________________________________________________
         # connect buttons with methods
         # __________________________________________________________________________
@@ -47,7 +58,7 @@ class MainWindow(QMainWindow):
         self.ui.pushButton_setROI.clicked.connect(self.set_ROI)
         self.ui.pushButton_apply_ROI.clicked.connect(self.apply_ROI)
         self.ui.pushButton_clear_ROI.clicked.connect(self.clear_ROI)
-
+        self.ui.pushButton_clear_crosshair.clicked.connect(self.clear_crosshair)
         # saving data part _________________________________________________________
         self.ui.pushButton_start_acq.clicked.connect(self.start_acquisition)
         self.ui.pushButton_stop_acq.clicked.connect(self.stop_acquisition)
@@ -83,8 +94,11 @@ class MainWindow(QMainWindow):
             self.image_item = pg.ImageItem(image=normalized_image_data)
         else:
             self.image_item = pg.ImageItem(image=self.image_data)
-
         self.main_view.addItem(self.image_item)
+        # if there is a crosshair:
+        if self.crosshair_enabled is True:
+            self.plot_crosshair()
+        
         self._number_frame += 1
         self.ui.textBrowserLogs.clear()
         self.ui.textBrowserLogs.append(
@@ -128,6 +142,8 @@ class MainWindow(QMainWindow):
             "Frame number : "+str(self._number_frame))
         if self.acquistion is True:
             self.acquisition_data.append(self.image_data)
+        if self.crosshair_enabled is True:
+            self.plot_crosshair()
 
     def start_thread(self):
         """
@@ -223,6 +239,7 @@ class MainWindow(QMainWindow):
         self.andor.cam.set_roi(hstart=y, hend=y + h,
                                vstart=x, vend=x + w, hbin=1, vbin=1)
         self.ui.pushButton_apply_ROI.setEnabled(False)
+        self.roi_is_applied = True
 
     def clear_ROI(self):
         """
@@ -233,6 +250,7 @@ class MainWindow(QMainWindow):
         self.andor.cam.set_roi()
         self.ui.pushButton_setROI.setEnabled(True)
         self.ui.pushButton_apply_ROI.setEnabled(True)
+        self.roi_is_applied = False
 
     def start_acquisition(self):
         initial_directory = "Z:/data_phd_thomas_2023_202x/relaunch_sarocema"
@@ -248,3 +266,59 @@ class MainWindow(QMainWindow):
         self.acquistion = False
         self.acquisition_data = None
         self.ui.pushButton_start_acq.setEnabled(True)
+
+    def on_resize(self, event):
+        # Garder la largeur et la hauteur de la fenêtre égales pour le rendre carré
+        size = min(self.width(), self.height())
+        self.main_view.setGeometry(0, 0, size, size)
+        event.accept()
+        
+    def mouse_click_event(self, event):
+        if event.double():
+            # Clear existing crosshair
+            self.clear_crosshair()
+            
+            # Get the position of the double click event
+            pos = event.pos()
+            # Map the position to coordinates of the PlotItem
+            pos_mapped = self.main_view.mapSceneToView(pos)
+            # Get the x and y coordinates
+            self.x_coord = pos_mapped.x()
+            self.y_coord = pos_mapped.y()
+            
+            self.plot_crosshair()
+            self.crosshair_enabled = True
+                   
+    def plot_crosshair(self):
+       # Calculate the appropriate size for the crosshair based on the visible range of the plot
+        x_range = self.main_view.viewRange()[0]
+        y_range = self.main_view.viewRange()[1]
+
+        # Add horizontal line of the crosshair
+        self.crosshair_h = pg.PlotCurveItem(x=[x_range[0], x_range[1]], y=[self.y_coord, self.y_coord], pen={'color': 'r', 'width': 1})
+        self.main_view.addItem(self.crosshair_h)
+        
+        # Add vertical line of the crosshair
+        self.crosshair_v = pg.PlotCurveItem(x=[self.x_coord, self.x_coord], y=[y_range[0], y_range[1]], pen={'color': 'r', 'width': 1})
+        self.main_view.addItem(self.crosshair_v)
+        
+        # display to the cuts PlotWidgets
+        Hcut = self.image_data[:, int(self.y_coord)]
+        Vcut = self.image_data[int(self.x_coord), :]
+        x_values = np.arange(len(Vcut))
+        new_x = Vcut
+        new_y = -x_values
+        self.ui.widget_Hcut.clear()
+        self.ui.widget_Vcut.clear()
+        self.ui.widget_Hcut.plot(Hcut)
+        self.ui.widget_Vcut.plot(new_x, new_y)         
+    
+    def clear_crosshair(self):
+        # Remove existing crosshair
+        if self.crosshair_h is not None:
+            self.main_view.removeItem(self.crosshair_h)
+            self.crosshair_h = None
+        if self.crosshair_v is not None:
+            self.main_view.removeItem(self.crosshair_v)
+            self.crosshair_v = None
+        self.crosshair_enabled = False

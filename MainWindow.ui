@@ -34,33 +34,8 @@ background-color:rgb(67, 67, 67);
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0">
-      <item row="0" column="0" rowspan="2" colspan="2">
-       <widget class="GraphicsLayoutWidget" name="widgetFrame" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>540</width>
-          <height>540</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>19000</width>
-          <height>19000</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0,0,0">
+      <item row="3" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="label_2">
@@ -159,36 +134,7 @@ QPushButton:pressed {
         </item>
        </layout>
       </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton_shot">
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-	font: 14pt &quot;Arial&quot;;
-    background-color: rgb(70, 30, 40);  /* Nouvelle couleur de fond (gris foncé) */
-    color: white;  /* Couleur du texte */
-    border: 1px solid rgb(100, 100, 100);  /* Bordure */
-    border-radius: 9px;  /* Coins arrondis */
-    padding: 5px 20px;  /* Marge intérieure */
-    min-height: 20px;  /* Hauteur minimale */
-}
-
-QPushButton:hover {
-    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
-}
-
-QPushButton:pressed {
-    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
-    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
-}
-
-</string>
-        </property>
-        <property name="text">
-         <string>Shot</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="4" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QLabel" name="label">
@@ -382,6 +328,51 @@ QPushButton:pressed {
        </layout>
       </item>
       <item row="3" column="1">
+       <widget class="QPushButton" name="pushButton_clear_crosshair">
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	font: 14pt &quot;Arial&quot;;
+    background-color: rgb(40, 40, 40);  /* Nouvelle couleur de fond (gris foncé) */
+    color: white;  /* Couleur du texte */
+    border: 1px solid rgb(100, 100, 100);  /* Bordure */
+    border-radius: 9px;  /* Coins arrondis */
+    padding: 5px 20px;  /* Marge intérieure */
+    min-height: 20px;  /* Hauteur minimale */
+}
+
+QPushButton:hover {
+    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
+}
+
+QPushButton:pressed {
+    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
+    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
+}
+
+</string>
+        </property>
+        <property name="text">
+         <string>Clear crosshair</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="PlotWidget" name="widget_Hcut" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>60</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>60</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
        <widget class="QPushButton" name="pushButton_normalisation">
         <property name="styleSheet">
          <string notr="true">QPushButton {
@@ -410,105 +401,7 @@ QPushButton:pressed {
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="label_external_trig">
-          <property name="styleSheet">
-           <string notr="true">QLabel {
-    color: rgb(255, 255, 255); /* Couleur du texte (blanc) */
-    font-family: Arial, sans-serif; /* Police de caractères */
-    font-size: 16px; /* Taille de la police */
-    font-weight: bold; /* Gras */
-    padding: 5px; /* Marge intérieure */
-}
-
-#customLabel {
-    background-color: rgb(40, 40, 40); /* Couleur de fond */
-    border-radius: 5px; /* Coins arrondis */
-    padding: 10px; /* Marge intérieure */
-}
-</string>
-          </property>
-          <property name="text">
-           <string>External trigger mode :</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_start_ext">
-          <property name="styleSheet">
-           <string notr="true">QPushButton {
-	font: 14pt &quot;Arial&quot;;
-    background-color: rgb(40, 40, 40);  /* Nouvelle couleur de fond (gris foncé) */
-    color: white;  /* Couleur du texte */
-    border: 1px solid rgb(100, 100, 100);  /* Bordure */
-    border-radius: 9px;  /* Coins arrondis */
-    padding: 5px 20px;  /* Marge intérieure */
-    min-height: 20px;  /* Hauteur minimale */
-}
-
-QPushButton:hover {
-    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
-}
-
-QPushButton:pressed {
-    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
-    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
-}
-
-</string>
-          </property>
-          <property name="text">
-           <string>Start</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_stop_ext">
-          <property name="styleSheet">
-           <string notr="true">QPushButton {
-	font: 14pt &quot;Arial&quot;;
-    background-color: rgb(40, 40, 40);  /* Nouvelle couleur de fond (gris foncé) */
-    color: white;  /* Couleur du texte */
-    border: 1px solid rgb(100, 100, 100);  /* Bordure */
-    border-radius: 9px;  /* Coins arrondis */
-    padding: 5px 20px;  /* Marge intérieure */
-    min-height: 20px;  /* Hauteur minimale */
-}
-
-QPushButton:hover {
-    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
-}
-
-QPushButton:pressed {
-    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
-    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
-}
-
-</string>
-          </property>
-          <property name="text">
-           <string>Stop</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="5" column="0">
+      <item row="6" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
          <widget class="QLabel" name="label_ROI">
@@ -635,6 +528,180 @@ QPushButton:pressed {
         </item>
        </layout>
       </item>
+      <item row="0" column="0" rowspan="2" colspan="2">
+       <widget class="GraphicsLayoutWidget" name="widgetFrame" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>540</width>
+          <height>540</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>19000</width>
+          <height>19000</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_external_trig">
+          <property name="styleSheet">
+           <string notr="true">QLabel {
+    color: rgb(255, 255, 255); /* Couleur du texte (blanc) */
+    font-family: Arial, sans-serif; /* Police de caractères */
+    font-size: 16px; /* Taille de la police */
+    font-weight: bold; /* Gras */
+    padding: 5px; /* Marge intérieure */
+}
+
+#customLabel {
+    background-color: rgb(40, 40, 40); /* Couleur de fond */
+    border-radius: 5px; /* Coins arrondis */
+    padding: 10px; /* Marge intérieure */
+}
+</string>
+          </property>
+          <property name="text">
+           <string>External trigger mode :</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_start_ext">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	font: 14pt &quot;Arial&quot;;
+    background-color: rgb(40, 40, 40);  /* Nouvelle couleur de fond (gris foncé) */
+    color: white;  /* Couleur du texte */
+    border: 1px solid rgb(100, 100, 100);  /* Bordure */
+    border-radius: 9px;  /* Coins arrondis */
+    padding: 5px 20px;  /* Marge intérieure */
+    min-height: 20px;  /* Hauteur minimale */
+}
+
+QPushButton:hover {
+    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
+}
+
+QPushButton:pressed {
+    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
+    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Start</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_stop_ext">
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	font: 14pt &quot;Arial&quot;;
+    background-color: rgb(40, 40, 40);  /* Nouvelle couleur de fond (gris foncé) */
+    color: white;  /* Couleur du texte */
+    border: 1px solid rgb(100, 100, 100);  /* Bordure */
+    border-radius: 9px;  /* Coins arrondis */
+    padding: 5px 20px;  /* Marge intérieure */
+    min-height: 20px;  /* Hauteur minimale */
+}
+
+QPushButton:hover {
+    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
+}
+
+QPushButton:pressed {
+    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
+    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
+}
+
+</string>
+          </property>
+          <property name="text">
+           <string>Stop</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="0" column="2">
+       <widget class="PlotWidget" name="widget_Vcut" native="true">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>60</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>60</width>
+          <height>16777215</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QPushButton" name="pushButton_shot">
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	font: 14pt &quot;Arial&quot;;
+    background-color: rgb(70, 30, 40);  /* Nouvelle couleur de fond (gris foncé) */
+    color: white;  /* Couleur du texte */
+    border: 1px solid rgb(100, 100, 100);  /* Bordure */
+    border-radius: 9px;  /* Coins arrondis */
+    padding: 5px 20px;  /* Marge intérieure */
+    min-height: 20px;  /* Hauteur minimale */
+}
+
+QPushButton:hover {
+    background-color: rgb(50, 50, 50);  /* Nouvelle couleur de fond au survol (gris légèrement plus clair) */
+}
+
+QPushButton:pressed {
+    background-color: rgb(30, 30, 30);  /* Nouvelle couleur de fond lors du clic (gris plus foncé) */
+    border: 1px solid rgb(80, 80, 80);  /* Bordure au clic */
+}
+
+</string>
+        </property>
+        <property name="text">
+         <string>Shot</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
@@ -709,6 +776,12 @@ QTextBrowser:hover {
  <customwidgets>
   <customwidget>
    <class>GraphicsLayoutWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PlotWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>
