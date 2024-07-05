@@ -137,9 +137,9 @@ class MainWindow(QMainWindow):
 
         self.main_view.addItem(self.image_item)
         self._number_frame += 1
-        # self.ui.textBrowserLogs.clear()
+        """# self.ui.textBrowserLogs.clear()
         self.ui.textBrowserLogs.append(
-            "Frame number : "+str(self._number_frame))
+            "Frame number : "+str(self._number_frame))"""
         if self.acquistion is True:
             self.acquisition_data.append(self.image_data)
         if self.crosshair_enabled is True:
